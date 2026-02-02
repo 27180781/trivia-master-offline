@@ -1,0 +1,143 @@
+name: Build Client EXE
+
+# Triggers when embedded-game.json changes
+on:
+  push:
+    paths:
+      - 'src/data/embedded-game.json'
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-exe:
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install Dependencies
+        run: npm install
+      
+      - name: Build React App
+        run: npm run build
+      
+      - name: Install Electron Dependencies
+        working-directory: ./electron
+        run: npm install
+      
+      - name: Build Windows EXE
+        working-directory: ./electron
+        run: npm run build:win
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Get Game Name from JSON
+        id: game_info
+        shell: pwsh
+        run: |
+          $json = Get-Content -Raw -Path src/data/embedded-game.json | ConvertFrom-Json
+          
+          # Try to get client name from meta or questions
+          $clientName = "trivia-game"
+          if ($json.meta -and $json.meta.clientName) {
+            $clientName = $json.meta.clientName
+          } elseif ($json.meta -and $json.meta.gameName) {
+            $clientName = $json.meta.gameName
+          }
+          
+          # Clean name for filename
+          $clientName = $clientName -replace '[^a-zA-Z0-9-]', '-'
+          $clientName = $clientName -replace '-+', '-'
+          $clientName = $clientName.Trim('-')
+          
+          if ([string]::IsNullOrWhiteSpace($clientName)) {
+            $clientName = "trivia-game"
+          }
+          
+          $questionCount = 0
+          if ($json.questions) {
+            $questionCount = $json.questions.Count
+          }
+          
+          echo "CLIENT_NAME=$clientName" >> $env:GITHUB_OUTPUT
+          echo "QUESTION_COUNT=$questionCount" >> $env:GITHUB_OUTPUT
+          echo "Client: $clientName with $questionCount questions"
+      
+      - name: Find EXE File
+        id: find_exe
+        shell: pwsh
+        run: |
+          $exeFiles = Get-ChildItem -Path electron/release -Filter "*.exe" -Recurse
+          if ($exeFiles.Count -eq 0) {
+            Write-Error "No EXE file found!"
+            exit 1
+          }
+          
+          # Get the installer (Setup.exe)
+          $installer = $exeFiles | Where-Object { $_.Name -like "*Setup*.exe" } | Select-Object -First 1
+          if (-not $installer) {
+            $installer = $exeFiles | Select-Object -First 1
+          }
+          
+          echo "EXE_PATH=$($installer.FullName)" >> $env:GITHUB_OUTPUT
+          echo "EXE_NAME=$($installer.Name)" >> $env:GITHUB_OUTPUT
+          echo "Found: $($installer.Name)"
+      
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.game_info.outputs.CLIENT_NAME }}-${{ github.run_number }}
+          name: 🎮 ${{ steps.game_info.outputs.CLIENT_NAME }}
+          body: |
+            # 🎮 משחק טריוויה - ${{ steps.game_info.outputs.CLIENT_NAME }}
+            
+            ## 📊 פרטי המשחק
+            - **לקוח:** ${{ steps.game_info.outputs.CLIENT_NAME }}
+            - **שאלות:** ${{ steps.game_info.outputs.QUESTION_COUNT }}
+            - **גרסה:** #${{ github.run_number }}
+            - **תאריך:** ${{ github.event.head_commit.timestamp }}
+            
+            ## 💾 התקנה
+            1. הורד את הקובץ למטה
+            2. הרץ את ה-Setup
+            3. התקן את המשחק
+            4. תהנה!
+            
+            ## 💻 דרישות מערכת
+            - Windows 10/11 (64-bit)
+            - 500MB שטח פנוי
+            
+            ---
+            
+            **Build:** ${{ github.sha }}
+          draft: false
+          prerelease: false
+          files: |
+            ${{ steps.find_exe.outputs.EXE_PATH }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Upload Artifact (Backup)
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.game_info.outputs.CLIENT_NAME }}-build-${{ github.run_number }}
+          path: ${{ steps.find_exe.outputs.EXE_PATH }}
+          retention-days: 30
+      
+      - name: Success Summary
+        run: |
+          echo "### ✅ בנייה הצליחה!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**לקוח:** ${{ steps.game_info.outputs.CLIENT_NAME }}" >> $GITHUB_STEP_SUMMARY
+          echo "**שאלות:** ${{ steps.game_info.outputs.QUESTION_COUNT }}" >> $GITHUB_STEP_SUMMARY
+          echo "**קובץ:** ${{ steps.find_exe.outputs.EXE_NAME }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**[⬇️ הורד מכאן](${{ steps.create_release.outputs.url }})**" >> $GITHUB_STEP_SUMMARY
