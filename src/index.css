@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* FB Kanuba Font */
+@font-face {
+  font-family: 'FB Kanuba';
+  src: url('/fonts/fbkanuba-regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'FB Kanuba';
+  src: url('/fonts/fbkanuba-bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* מערכת טריוויה - עיצוב מודרני כהה */
+
+@layer base {
+  :root {
+    --background: 222 47% 6%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 47% 8%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 8%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 47% 6%;
+
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 142 76% 36%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 217 91% 60%;
+
+    --radius: 0.75rem;
+
+    /* צבעים מותאמים למשחק */
+    --game-correct: 142 76% 36%;
+    --game-wrong: 0 84% 60%;
+    --game-timer: 38 92% 50%;
+    --game-survey: 270 76% 60%;
+    --game-option: 217 33% 20%;
+    --game-option-hover: 217 33% 25%;
+    
+    /* גרדיאנטים */
+    --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%), hsl(270 76% 60%));
+    --gradient-success: linear-gradient(135deg, hsl(142 76% 36%), hsl(170 76% 40%));
+    --gradient-warning: linear-gradient(135deg, hsl(38 92% 50%), hsl(25 92% 50%));
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    direction: rtl;
+  }
+
+  body {
+    @apply bg-background text-foreground font-kanuba antialiased;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-gradient-primary {
+    background: var(--gradient-primary);
+  }
+
+  .bg-gradient-success {
+    background: var(--gradient-success);
+  }
+
+  .bg-gradient-warning {
+    background: var(--gradient-warning);
+  }
+
+  .game-fullscreen {
+    @apply fixed inset-0 z-50 bg-background;
+  }
+}
