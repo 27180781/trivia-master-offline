@@ -1,116 +1,105 @@
 
-## אבחון (למה זה לא עובד כרגע)
-מהצילום ששלחת רואים אזהרות:
-- `שורה 2: נדרשות לפחות 2 תשובות`
-- `שורה 3: נדרשות לפחות 2 תשובות`
+## תיקון מסך שחור ב-EXE - עדכון מסלולים נכון
 
-זה קורה כי בקובץ האקסל שלך הכותרת של העמודה היא **`מס' תשובה נכונה`**, אבל בקוד אנחנו מחפשים רק את הכותרת **`מספר התשובה הנכונה`** (`EXCEL_COLUMN_MAP.correctAnswer`).
+### הבעיה המרכזית
+כש-Electron ארוז ל-EXE, מבנה התיקיות משתנה. הנתיב `../dist/index.html` לא נכון בתוך ה-EXE הארוז.
 
-בגלל חוסר התאמה בכותרת:
-- `correctAnswerRaw` יוצא ריק (`''`)
-- השקופית לא מזוהה כ-`טקסט`
-- ואז הוולידציה דורשת “לפחות 2 תשובות” ונופלת על שתי השורות הראשונות (שהן באמת טקסט בלי תשובות)
+### מה צריך לשנות
 
-כלומר: הבעיה היא **מיפוי כותרות האקסל**, לא “טקסט” עצמו.
+#### קובץ: `electron/main.js`
+```javascript
+const { app, BrowserWindow, Menu } = require('electron');
+const path = require('path');
 
----
+const isDev = !app.isPackaged;
 
-## מה נשנה כדי שזה יעבוד תמיד
-### 1) להפוך את קריאת עמודות באקסל ל”עמידה” לשמות שונים
-קובץ יעד: `src/lib/excelParser.ts`
+Menu.setApplicationMenu(null);
 
-נוסיף מנגנון שמזהה עמודות לפי “רשימת שמות אפשריים” (כולל וריאציות נפוצות) במקום להסתמך על שם אחד קשיח.
+function createWindow() {
+  const win = new BrowserWindow({
+    width: 1280,
+    height: 720,
+    fullscreen: true,
+    fullscreenable: true,
+    autoHideMenuBar: true,
+    backgroundColor: '#0a0a0a',
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+      devTools: true
+    },
+  });
 
-דוגמא למיפוי שנתמוך בו (לעמודת תשובה נכונה):
-- `מספר התשובה הנכונה` (הקיים)
-- `מס' תשובה נכונה` (הקובץ שלך)
-- `מס׳ תשובה נכונה` (גרש עברי)
-- `מספר תשובה נכונה`
-- (אופציונלי) `Correct Answer`, `correctAnswer`
+  // נתיב נכון לפי מצב האפליקציה
+  let startUrl;
+  if (isDev) {
+    // מצב פיתוח - dist נמצאת בתיקייה הראשית
+    startUrl = path.join(__dirname, '../dist/index.html');
+  } else {
+    // מצב EXE ארוז - dist ארוזה בתוך app.asar
+    startUrl = path.join(process.resourcesPath, 'app.asar', 'dist', 'index.html');
+  }
 
-טכנית:
-- ניצור helper כמו `getCellValue(row, candidateHeaders)` שמחזיר את הערך לפי הכותרת הראשונה שקיימת בשורה.
-- נשתמש בו עבור `correctAnswer`, ובמידת הצורך גם עבור `question/timeLimit/points` (כדי למנוע תקלות עתידיות).
+  console.log('isDev:', isDev);
+  console.log('Loading file from:', startUrl);
 
----
+  win.loadFile(startUrl).catch(err => {
+    console.error('Failed to load file:', err);
+    // הצג הודעת שגיאה בחלון עצמו
+    win.loadURL(`data:text/html,<h1 style="color:white;background:#0a0a0a;padding:50px;">שגיאה בטעינה: ${err.message}<br><br>נתיב: ${startUrl}</h1>`);
+  });
 
-### 2) להוסיף בדיקת “עמודות חובה” עם הודעת שגיאה ברורה
-קובץ יעד: `src/lib/excelParser.ts`
+  win.webContents.on('before-input-event', (event, input) => {
+    if (input.key === 'F11') {
+      win.setFullScreen(!win.isFullScreen());
+    }
+    if (input.key === 'F12') {
+      win.webContents.openDevTools();
+    }
+  });
+}
 
-אם לא נמצאה עמודת “תשובה נכונה” באף אחד מהשמות הנתמכים:
-- נחזיר `success: false`
-- עם הודעה ברורה בסגנון:
-  - “לא נמצאה עמודת ‘מספר התשובה הנכונה’ / ‘מס' תשובה נכונה’. בדקי את כותרות העמודות באקסל.”
+app.whenReady().then(createWindow);
 
-זה ימנע מצב שהקובץ “נטען בהצלחה” אבל בפועל שקופיות נעלמות.
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
+});
 
----
+app.on('activate', () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow();
+  }
+});
+```
 
-### 3) להקשיח זיהוי סוג שקופית “טקסט”
-קובץ יעד: `src/lib/excelParser.ts`
+#### קובץ: `electron/package.json` - שינוי מבנה הקבצים
+צריך לוודא שה-`files` מוגדר נכון:
+```json
+"files": [
+  "main.js",
+  {
+    "from": "../dist",
+    "to": "dist"
+  }
+]
+```
 
-גם אחרי שמיפוי הכותרת יעבוד, נחזק את הזיהוי כך שיתמודד עם:
-- רווחים (`"טקסט "`)
-- וריאציות באנגלית (אם תרצי): `"Text"`, `"TEXT"`
+זה יארוז את תיקיית `dist` **בתוך** ה-app.asar בנתיב `dist/` (לא `../dist`).
 
-טכנית:
-- ננרמל את הערך (`trim`, המרה למחרוזת)
-- נשווה מול סט ערכים ידועים.
+### למה זה יפתור את הבעיה
+1. **`app.isPackaged`** - מזהה נכון אם רצים מ-EXE או מפיתוח
+2. **`process.resourcesPath`** - נותן את הנתיב הנכון לקבצים ארוזים ב-Electron
+3. **הודעת שגיאה בחלון** - אם עדיין יש בעיה, תראה הודעה במקום מסך שחור
+4. **F12 לדיבאג** - תוכל לפתוח DevTools לראות שגיאות
 
----
+### בדיקות לאחר התיקון
+1. בנה מחדש: `npm run build` ואז `cd electron && npm run build:win`
+2. הרץ את ה-EXE
+3. אם עדיין יש מסך שחור - לחץ F12 לפתיחת DevTools
+4. בטרמינל (אם תריץ ידנית) תראה את הנתיב שנטען
 
-### 4) להציג ירידות שורה מתוך אקסל בצורה יפה (מומלץ במיוחד לשקופיות טקסט)
-בעיה נפוצה: באקסל יש ירידות שורה, אבל בדפדפן הן לא תמיד מוצגות.
-
-קבצים:
-- `src/lib/excelParser.ts` (נרמול טקסט)
-- `src/components/game/QuestionDisplay.tsx` (CSS להצגת ירידות שורה)
-
-מה נעשה:
-- בפרסר נחליף `<br/>` אם מופיע בטקסט, ונאחד `\r\n` ל-`\n`
-- ב-`QuestionDisplay` נוסיף למחלקות של הטקסט `whitespace-pre-wrap` (או `whitespace-pre-line`) כדי שירידות השורה יוצגו.
-
----
-
-### 5) (אופציונלי) לשפר את ה־Setup Summary וה־Preview כך ש”טקסט” ייספר בנפרד
-קובץ יעד: `src/pages/Setup.tsx`
-
-כרגע המספרים ב־Setup מחשבים “טריוויה” כ־`!isSurvey` ולכן שקופיות טקסט עלולות להיכנס לשם.
-נשפר:
-- להוסיף ספירה נפרדת: “טקסט”
-- להוציא טקסט מחישוב “טריוויה”
-- בתצוגה מקדימה: להציג תגית “טקסט” ולהימנע מלהציג “0 תשובות • X שניות” עבור טקסט (כי זה מבלבל)
-
----
-
-## איך נבדוק שזה נפתר (בדיקות קבלה)
-1) להעלות את הקובץ שלך `חסר_לי_שם_2_שאלות_1-3.xlsx` ב־Setup
-   - לא אמורות להיות אזהרות “נדרשות לפחות 2 תשובות” עבור שורות הטקסט
-   - אמורות להופיע כל השאלות כולל 2 שקופיות הטקסט הראשונות
-2) להתחיל משחק ולוודא:
-   - שקופית 1 (טקסט) מוצגת
-   - בלחיצה עוברים לשקופית 2 (טקסט)
-   - בלחיצה עוברים לשאלה 3 (שאלה רגילה)
-3) להעלות גם קובץ אקסל ישן (אם יש לך) שבו הכותרת היא `מספר התשובה הנכונה` כדי לוודא שלא שברנו תאימות לאחור.
-
----
-
-## קבצים שיושפעו
-- `src/lib/excelParser.ts` (עיקר התיקון)
-- `src/components/game/QuestionDisplay.tsx` (הצגת ירידות שורה)
-- `src/pages/Setup.tsx` (אופציונלי: ספירות/תצוגה מקדימה)
-
----
-
-## הערות טכניות (לשקיפות)
-- כרגע הקובץ שלך מכיל כותרת `מס' תשובה נכונה` (רואים את זה גם מה-parsing של המסמך).
-- בגלל שהקוד משתמש ב-`EXCEL_COLUMN_MAP.correctAnswer` בלבד, הוא לא “רואה” את ערך `טקסט` ולכן מפעיל וולידציה של תשובות.
-- הפתרון הנכון הוא תמיכה בוריאציות של כותרות + הודעת שגיאה ברורה אם עמודה חסרה, כדי שלא “נטען בהצלחה” כשחסרה עמודה קריטית.
-
-<lov-actions>
-<lov-suggestion message="אחרי שאיישם את התיקון, העלה שוב את אותו קובץ אקסל ובדוק ב-Setup שאין אזהרות וששתי שקופיות הטקסט הראשונות מופיעות גם במשחק.">בדיקה מקצה לקצה</lov-suggestion>
-<lov-suggestion message="להוסיף ספירה נפרדת של 'טקסט' במסך Setup (במקום שייכנס ל'טריוויה') + תגית 'טקסט' בתצוגה מקדימה.">שיפור מסך Setup</lov-suggestion>
-<lov-suggestion message="להוסיף תמיכה גם בכותרות באנגלית (Question, Answer 1-6, Correct Answer, Time Limit, Points) כדי לאפשר תבנית דו-לשונית.">תמיכה באנגלית באקסל</lov-suggestion>
-<lov-suggestion message="להוסיף אפשרות לשקופית טקסט עם תמונה (עמודה נוספת באקסל, למשל 'תמונה', שמקבלת URL או שם קובץ) והצגה במשחק.">טקסט עם תמונה</lov-suggestion>
-<lov-suggestion message="להוסיף כפתור/קיצור 'דלג' אוטומטי לשקופית הבאה אחרי X שניות עבור שקופיות טקסט (אופציונלי בהגדרות).">מעבר אוטומטי לטקסט</lov-suggestion>
-</lov-actions>
+### קבצים שיושפעו
+- `electron/main.js` - עדכון לוגיקת טעינה
+- `electron/package.json` - תיקון מבנה אריזה
