@@ -1,6 +1,370 @@
 {
-  "meta": null,
-  "questions": [],
-  "settings": null,
-  "assets": null
+  "meta": {
+    "name": "חידון גברא",
+    "createdAt": "2026-02-02T02:55:16.800Z",
+    "version": "1.0",
+    "questionCount": 26
+  },
+  "questions": [
+    {
+      "id": 1,
+      "question": "ועכשיו---\nמוזמנות איתנו לחידון בחירות\nלהפעיל מוחות ואת כוחכן להראות---\nנראה מי תהייה הראשונה\nשתענה את התשובה הנכונה!!",
+      "answers": [],
+      "correctAnswerIndex": null,
+      "timeLimit": 15,
+      "points": 7,
+      "isSurvey": false,
+      "isTextOnly": true
+    },
+    {
+      "id": 2,
+      "question": "איך זה עובד?\nכל בת מקבלת קרפים בשלושה צבעים\nעל המסך תופיע שאלה ולה 3 תשובות\nכל תשובה מסומנת בצבע אחר, \nעלייך להניף את הקרפ עם הצבע של התשובה שאת בוחרת!!\nמוכנות??\nיצאנו לדרך---",
+      "answers": [],
+      "correctAnswerIndex": null,
+      "timeLimit": 15,
+      "points": 7,
+      "isSurvey": false,
+      "isTextOnly": true
+    },
+    {
+      "id": 3,
+      "question": "מי בחרה להפיל עצמה לכבשן האש ולא להלבין פנים?",
+      "answers": [
+        "תמר, כלתו של יהודה.",
+        "אמם של התאומים פרץ וזרח.",
+        "תשובות 1 ו-2 נכונות."
+      ],
+      "correctAnswerIndex": 2,
+      "timeLimit": 15,
+      "points": 7,
+      "isSurvey": false,
+      "isTextOnly": false
+    },
+    {
+      "id": 4,
+      "question": "באיזה חומש נכתב לנו הציווי: \"ובחרת בחיים\"?",
+      "answers": [
+        "בחומש בראשית",
+        "בחומש שמות פרשת יתרו",
+        "בחומש דברים"
+      ],
+      "correctAnswerIndex": 2,
+      "timeLimit": 15,
+      "points": 7,
+      "isSurvey": false,
+      "isTextOnly": false
+    },
+    {
+      "id": 5,
+      "question": "מי בחר לשבת במקום אנשי רשע רק בגלל שהמרעה בו משובח?",
+      "answers": [
+        "לוט, בכיכר הירדן.",
+        "ראובן, בארץ גושן.",
+        "איוב, בארץ עוץ."
+      ],
+      "correctAnswerIndex": 0,
+      "timeLimit": 15,
+      "points": 7,
+      "isSurvey": false,
+      "isTextOnly": false
+    },
+    {
+      "id": 6,
+      "question": "מי אמר: \"בחרתי הסתופף בבית אלוקי מדור באוהלי רשע\"...",
+      "answers": [
+        "שמואל הנביא",
+        "דוד המלך",
+        "ישעיהו הנביא"
+      ],
+      "correctAnswerIndex": 1,
+      "timeLimit": 15,
+      "points": 7,
+      "isSurvey": false,
+      "isTextOnly": false
+    },
+    {
+      "id": 7,
+      "question": "\"כי הטוב ידבק בטוב, ולכן יצווה עמו לבחור בטוב...\" מהיכן לקוחות מילות השיר?",
+      "answers": [
+        "ספר מורה הנבוכים- (הרמב\"ם)",
+        "ספר חובת בלבבות",
+        "ספר החינוך"
+      ],
+      "correctAnswerIndex": 2,
+      "timeLimit": 15,
+      "points": 7,
+      "isSurvey": false,
+      "isTextOnly": false
+    },
+    {
+      "id": 8,
+      "question": "הגדרת המושג בחירה חופשית (האדם קובע מרצונו החופשי...) לקוחה מתוך:",
+      "answers": [
+        "הרמב\"ם",
+        "הרב הירש",
+        "המילון העברי"
+      ],
+      "correctAnswerIndex": 0,
+      "timeLimit": 15,
+      "points": 7,
+      "isSurvey": false,
+      "isTextOnly": false
+    },
+    {
+      "id": 9,
+      "question": "איפה בעיקר פוגשת אותך ההתמודדות בבחירת הטוב:",
+      "answers": [
+        "בבית הספר מול חברות ומורות",
+        "בבית מול משפחתי",
+        "ברחוב, בקניות, בבין לבין..."
+      ],
+      "correctAnswerIndex": null,
+      "timeLimit": 15,
+      "points": 7,
+      "isSurvey": true,
+      "isTextOnly": false
+    },
+    {
+      "id": 10,
+      "question": "מהי הנושא שהיית בוחרת לחזק במיוחד בגילך?",
+      "answers": [
+        "טכנולוגיה",
+        "שמירת הלשון",
+        "צניעות"
+      ],
+      "correctAnswerIndex": null,
+      "timeLimit": 15,
+      "points": 7,
+      "isSurvey": true,
+      "isTextOnly": false
+    },
+    {
+      "id": 11,
+      "question": "אם הייתה אפשרות דמיונית כזו, מה היית רוצה לבחור?",
+      "answers": [
+        "את השם שלי...",
+        "להיות נביאה בדור יציאת מצריים והמדבר...",
+        "לחיות מאתיים שנה..."
+      ],
+      "correctAnswerIndex": null,
+      "timeLimit": 15,
+      "points": 7,
+      "isSurvey": true,
+      "isTextOnly": false
+    },
+    {
+      "id": 12,
+      "question": "בדרך כלל לאחר בחירה משמעותית---",
+      "answers": [
+        "אני מתחרטת אלף פעם...",
+        "אני שלמה עם עצמי מאה אחוז",
+        "לפעמים אני מתחרטת ולפעמים לא"
+      ],
+      "correctAnswerIndex": null,
+      "timeLimit": 15,
+      "points": 7,
+      "isSurvey": true,
+      "isTextOnly": false
+    },
+    {
+      "id": 13,
+      "question": "מה הכי נותן לך כח לבחור נכון גם כשקשה מאוד?",
+      "answers": [
+        "הידיעה שכל מעשה קטן מכריע את כל העולם...",
+        "להעמיד את העתיד שלי מול עיניי...",
+        "כשאני מדמיינת כמה אני משמחת את ה'..."
+      ],
+      "correctAnswerIndex": null,
+      "timeLimit": 15,
+      "points": 7,
+      "isSurvey": true,
+      "isTextOnly": false
+    },
+    {
+      "id": 14,
+      "question": "מה שהכי משפיע עלי בבחירות קטנות שלא דווקא רוחניות זה:",
+      "answers": [
+        "מה שיעשה לי שם טוב",
+        "מה שהכי מקובל",
+        "בדיוק מה שאני רוצה!"
+      ],
+      "correctAnswerIndex": null,
+      "timeLimit": 15,
+      "points": 7,
+      "isSurvey": true,
+      "isTextOnly": false
+    },
+    {
+      "id": 15,
+      "question": "מה שחשוב לי כשאני בוחרת בגד בחנות:",
+      "answers": [
+        "שהוא עדכני ו\"הולך\" היום",
+        "שהמחיר הגיוני",
+        "שהוא צנוע ומכובד"
+      ],
+      "correctAnswerIndex": null,
+      "timeLimit": 15,
+      "points": 7,
+      "isSurvey": true,
+      "isTextOnly": false
+    },
+    {
+      "id": 16,
+      "question": "אני חושבת שסמינרים בוחרים בנות בעיקר לפי:",
+      "answers": [
+        "מי החברות הטובות",
+        "סגנון בית",
+        "רמה רוחנית של הבת"
+      ],
+      "correctAnswerIndex": null,
+      "timeLimit": 15,
+      "points": 7,
+      "isSurvey": true,
+      "isTextOnly": false
+    },
+    {
+      "id": 17,
+      "question": "חברתך הטובה נבחרה לסולו במסיבה",
+      "answers": [
+        "תחמיאי",
+        "תתאכזבי",
+        "תתלונני"
+      ],
+      "correctAnswerIndex": 0,
+      "timeLimit": 15,
+      "points": 7,
+      "isSurvey": false,
+      "isTextOnly": false
+    },
+    {
+      "id": 18,
+      "question": "אחותך כועסת על חדרך המבולגן",
+      "answers": [
+        "התעלם",
+        "האשים",
+        "העריך"
+      ],
+      "correctAnswerIndex": 2,
+      "timeLimit": 15,
+      "points": 7,
+      "isSurvey": false,
+      "isTextOnly": false
+    },
+    {
+      "id": 19,
+      "question": "חברתך שלמדת עימה למבחן קיבלה 20 נקודות יותר ממך",
+      "answers": [
+        "חוסר הוגנות",
+        "אשמח",
+        "תחמיאי ברפיון"
+      ],
+      "correctAnswerIndex": 1,
+      "timeLimit": 15,
+      "points": 7,
+      "isSurvey": false,
+      "isTextOnly": false
+    },
+    {
+      "id": 20,
+      "question": "אחיך מבקש סיפור לפני השינה",
+      "answers": [
+        "אין לי כח",
+        "עוד מעט",
+        "בשמחה"
+      ],
+      "correctAnswerIndex": 2,
+      "timeLimit": 15,
+      "points": 7,
+      "isSurvey": false,
+      "isTextOnly": false
+    },
+    {
+      "id": 21,
+      "question": "שכחת ארוחת בוקר ואחותך הביאה לך",
+      "answers": [
+        "תודה",
+        "הערכה",
+        "התעלמות"
+      ],
+      "correctAnswerIndex": 1,
+      "timeLimit": 15,
+      "points": 7,
+      "isSurvey": false,
+      "isTextOnly": false
+    },
+    {
+      "id": 22,
+      "question": "אחותך אפתה עוגה לשבת",
+      "answers": [
+        "תוסיפי סוכר",
+        "נחמד",
+        "ידיים טובות"
+      ],
+      "correctAnswerIndex": 2,
+      "timeLimit": 15,
+      "points": 7,
+      "isSurvey": false,
+      "isTextOnly": false
+    },
+    {
+      "id": 23,
+      "question": "סיימת שמונ\"ע וחברתך מאחורייך",
+      "answers": [
+        "אמתין בסבלנות",
+        "אתרגש מתפילתה",
+        "היא לא שמה לב?"
+      ],
+      "correctAnswerIndex": 1,
+      "timeLimit": 15,
+      "points": 7,
+      "isSurvey": false,
+      "isTextOnly": false
+    },
+    {
+      "id": 24,
+      "question": "לא הכנת שיעורי בית בהיסטוריה וחברתך לידך זכרה",
+      "answers": [
+        "כל הכבוד",
+        "נולדה ככה",
+        "אוף"
+      ],
+      "correctAnswerIndex": 0,
+      "timeLimit": 15,
+      "points": 7,
+      "isSurvey": false,
+      "isTextOnly": false
+    },
+    {
+      "id": 25,
+      "question": "ילד קטן נתקע בעגלתך פעמים רבות",
+      "answers": [
+        "סליחה",
+        "עוברת מקום",
+        "צירוף למשחקך"
+      ],
+      "correctAnswerIndex": 2,
+      "timeLimit": 15,
+      "points": 7,
+      "isSurvey": false,
+      "isTextOnly": false
+    },
+    {
+      "id": 26,
+      "question": "אחיך מחלק ממתקיו לאחיו הקטנים",
+      "answers": [
+        "כמה ממתקים?",
+        "ילד נדיב",
+        "מה מברכים?"
+      ],
+      "correctAnswerIndex": 1,
+      "timeLimit": 15,
+      "points": 7,
+      "isSurvey": false,
+      "isTextOnly": false
+    }
+  ],
+  "settings": {
+    "defaultTimeLimit": 30,
+    "showPoints": true
+  }
 }
