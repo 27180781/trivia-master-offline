@@ -1,7 +1,8 @@
 // Sound configuration
 // These sounds are fixed MP3 files that are always used (even in packaged versions)
-const TIMER_SOUND_URL = '/sounds/timer.mp3';
-const REVEAL_SOUND_URL = '/sounds/reveal.mp3';
+// Using relative paths (without leading /) for Electron compatibility
+const TIMER_SOUND_URL = './sounds/timer.mp3';
+const REVEAL_SOUND_URL = './sounds/reveal.mp3';
 
 // Built-in sounds
 const SOUNDS = {
