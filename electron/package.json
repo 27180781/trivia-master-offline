@@ -28,7 +28,10 @@
     },
     "files": [
       "main.js",
-      "../dist/**/*"
+      {
+        "from": "../dist",
+        "to": "dist"
+      }
     ],
     "extraResources": [],
     "win": {
