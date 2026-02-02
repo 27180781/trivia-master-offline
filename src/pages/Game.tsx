@@ -10,7 +10,8 @@ import {
   VolumeX,
   Home,
   SkipForward,
-  SkipBack
+  SkipBack,
+  X
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useGame } from '@/contexts/GameContext';
@@ -96,9 +97,29 @@ export default function GamePage() {
         <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
       )}
 
+      {/* Exit Button - top right corner (always visible) */}
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => {
+          // Try to close the window (works in Electron)
+          if (window.close) {
+            window.close();
+          }
+          // Fallback for browser - navigate away or show message
+          if (!window.closed) {
+            navigate('/');
+          }
+        }}
+        className="absolute top-4 right-4 z-20 opacity-40 hover:opacity-100 transition-opacity bg-background/50 hover:bg-destructive/80"
+        title="סגור משחק"
+      >
+        <X className="w-5 h-5" />
+      </Button>
+
       {/* Bravo Logo - bottom left corner */}
       <img 
-        src="/images/bravo-logo.png" 
+        src="./images/bravo-logo.png" 
         alt="Bravo" 
         className="absolute bottom-4 left-4 w-24 h-24 opacity-60 z-10 pointer-events-none"
       />
