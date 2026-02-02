@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Bravo Trivia Game - Locked Client Version",
   "main": "main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/27180781/trivia-master-offline.git"
+  },
   "author": "Bravo Quiz",
   "license": "UNLICENSED",
   "private": true,
