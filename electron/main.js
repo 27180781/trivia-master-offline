@@ -1,7 +1,8 @@
 const { app, BrowserWindow, Menu } = require('electron');
 const path = require('path');
 
-// Disable menu bar
+const isDev = !app.isPackaged;
+
 Menu.setApplicationMenu(null);
 
 function createWindow() {
@@ -15,34 +16,47 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
+      devTools: true
     },
   });
 
-  // Load the built Vite app
-  win.loadFile(path.join(__dirname, '../dist/index.html'));
+  // נתיב נכון לפי מצב האפליקציה
+  let startUrl;
+  if (isDev) {
+    // מצב פיתוח - dist נמצאת בתיקייה הראשית
+    startUrl = path.join(__dirname, '../dist/index.html');
+  } else {
+    // מצב EXE ארוז - dist ארוזה בתוך app.asar
+    startUrl = path.join(process.resourcesPath, 'app.asar', 'dist', 'index.html');
+  }
 
-  // Open DevTools in development (remove in production)
-  // win.webContents.openDevTools();
+  console.log('isDev:', isDev);
+  console.log('Loading file from:', startUrl);
 
-  // Handle fullscreen toggle with F11
+  win.loadFile(startUrl).catch(err => {
+    console.error('Failed to load file:', err);
+    // הצג הודעת שגיאה בחלון עצמו
+    win.loadURL(`data:text/html,<h1 style="color:white;background:#0a0a0a;padding:50px;">שגיאה בטעינה: ${err.message}<br><br>נתיב: ${startUrl}</h1>`);
+  });
+
   win.webContents.on('before-input-event', (event, input) => {
     if (input.key === 'F11') {
       win.setFullScreen(!win.isFullScreen());
     }
+    if (input.key === 'F12') {
+      win.webContents.openDevTools();
+    }
   });
 }
 
-// Create window when app is ready
 app.whenReady().then(createWindow);
 
-// Quit when all windows are closed (Windows & Linux)
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
 });
 
-// On macOS, re-create window when dock icon is clicked
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
